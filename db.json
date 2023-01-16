@@ -1,0 +1,20 @@
+{
+    "products": [
+        {
+            "id": 0,
+            "name": "Test",
+            "description": "Test description",
+            "price": "1",
+            "company": "test company",
+            "ageRestriction": "NA"
+        },
+        {
+            "id": 1,
+            "name": "Test 1",
+            "description": "Test description",
+            "price": "12",
+            "company": "test company",
+            "ageRestriction": "NA"
+        }
+    ]
+}
