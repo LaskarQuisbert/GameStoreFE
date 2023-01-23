@@ -1,6 +1,7 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { HttpClientModule } from "@angular/common/http";
+import { ReactiveFormsModule } from "@angular/forms";
 
 // Containers
 import { ProductsListComponent } from "./containers/products-list/products-list.component";
@@ -20,7 +21,8 @@ import { ProductsListService } from "./products-list.service";
     ],
     imports: [
         CommonModule,
-        HttpClientModule
+        HttpClientModule,
+        ReactiveFormsModule
     ],
     exports: [
         ProductsListComponent

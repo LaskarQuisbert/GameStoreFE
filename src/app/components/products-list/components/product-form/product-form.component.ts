@@ -1,68 +1,71 @@
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Product } from '../../models/product.interface';
+import { FormGroup, FormBuilder, Validators, RequiredValidator } from '@angular/forms';
 
 
 @Component({
     selector: 'product-form',
     styleUrls: ['product-form.component.scss'],
     template: `
-        <div class="container">
-            <div class="attribute">
-                Name:
-                <input 
-                    type="text"
-                    [value]="product.name"
-                    (input)="onNameChange(name.value)"
-                    #name>
+    <div class="product-form_container">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div>
+                <div class="attribute">    
+                    <p>Name: </p>
+                    <input 
+                        type="text"
+                        placeholder="Enter a product name"
+                        formControlName="name">
+                    <p *ngIf="validateField('name')">This value is not valid</p>
+                </div>
+                <div class="attribute">    
+                    <p>Price: </p>
+                    <input 
+                        type="number"
+                        placeholder="Enter a price"
+                        formControlName="price">
+                    <p *ngIf="validateField('price')">Price given is not valid</p>
+                </div>
+                <div class="attribute">    
+                    <p>Price: </p>
+                    <input 
+                        type="text"
+                        placeholder="Enter a company name"
+                        formControlName="company">
+                    <p *ngIf="validateField('name')">This value is not valid</p>
+                </div>
+                <div class="attribute">    
+                    <p>Price: </p>
+                    <input 
+                        type="number"
+                        placeholder="Enter an age limit"
+                        formControlName="ageRestriction">
+                    <p *ngIf="validateField('name')">This value is not valid</p>
+                </div>
+                <div class="attribute">    
+                    <p>Price: </p>
+                    <textarea 
+                        type="text"
+                        placeholder="Enter a description"
+                        formControlName="description">
+                    </textarea>
+                    <p *ngIf="validateField('name')">This value is not valid</p>
+                </div>
             </div>
-            <div class="attribute">
-                Price *:
-                <input 
-                    type="text" 
-                    [value]="product.price"
-                    (input)="onPriceChange(price.value)"
-                    #price>
-                    </div>
-            <div class="attribute">
-                Company:
-                <input 
-                    type="text" 
-                    [value]="product.company"
-                    (input)="onCompanyChange(company.value)"
-                    #company>
+            <div class="product-form__buttons">
+                <button 
+                    type="submit"
+                    [disabled]="form.invalid">
+                    Save
+                </button>
             </div>
-            <div class="attribute">
-                Age restriction *:
-                <input 
-                    type="text" 
-                    [value]="product.ageRestriction"
-                    (input)="onAgeChange(age.value)"
-                    #age>
-            </div>
-            <div class="attribute">
-                Description:    
-                <input 
-                    type="text" 
-                    [value]="product.description"
-                    (input)="onDescriptionChange(description.value)"
-                    #description>
-            </div>
-            <button class="my-button" (click)="handleSubmit()">Save</button>
-            <button class="my-button" (click)="handleCancel()">Cancel</button>
-
-        </div>
-    `
+        </form>
+    </div>
+`
 })
-export class ProductFormComponent implements OnChanges {
+export class ProductFormComponent implements OnInit {
     @Input()
-    product: Product = {
-        id: 0,
-        name: "",
-        price: "",
-        company: "",
-        ageRestriction: "",
-        description: ""
-    };
+    product?: Product;
 
     @Output()
     submit: EventEmitter<any> = new EventEmitter();
@@ -70,35 +73,50 @@ export class ProductFormComponent implements OnChanges {
     @Output()
     cancel: EventEmitter<any> = new EventEmitter();
 
-    constructor() {}
+    form!: FormGroup;
 
-    ngOnChanges(changes: any){
-        if(changes.product){
-            this.product = Object.assign({}, changes.product.currentvalue);
-        }
-    }
+    constructor(private readonly formBuilder: FormBuilder) { }
 
-    onNameChange(value: string){
-        this.product.name = value;
-    }
-    onPriceChange(value: string){
-        this.product.price = value;
-    }
-    onCompanyChange(value: string){
-        this.product.company = value;
-    }
-    onAgeChange(value: string){
-        this.product.ageRestriction = value;
-    }
-    onDescriptionChange(value: string){
-        this.product.description = value;
+    ngOnInit(): void {
+        this.form = this.initform();
     }
 
-    handleSubmit(){
-        this.submit.emit(this.product)
+    initform(): FormGroup {
+        return this.formBuilder.group({
+            id: [this.product?.id || 0, []],
+            name: [this.product?.name || "", [
+                Validators.minLength(3),
+                Validators.required,
+                Validators.maxLength(50)
+            ]],
+            price: [this.product?.price || 0, [
+                Validators.required,
+                Validators.min(1),
+                Validators.max(1000),
+            ]],
+            company: [this.product?.company || "", [
+                Validators.required,
+                Validators.maxLength(50)
+            ]],
+            ageRestriction: [this.product?.ageRestriction || 0, [
+                Validators.min(0),
+                Validators.max(100),
+            ]],
+            description: [this.product?.description || "", [
+                Validators.maxLength(50)
+            ]],
+        })
     }
 
-    handleCancel(){
+    validateField(value: string) {
+        return this.form.get(value)?.errors;
+    }
+
+    onSubmit() {
+        this.submit.emit(this.form.value);
+    }
+
+    handleCancel() {
         this.cancel.emit(this.product)
     }
 }

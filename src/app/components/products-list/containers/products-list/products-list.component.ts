@@ -21,7 +21,7 @@ import { ProductsListService } from "../../products-list.service";
                 <tbody>
                     <product-row
                         *ngFor="let product of products"
-                        [detail]="product"
+                        [item]="product"
                         (edit)="handleEdit($event)"
                         (remove)="handleRemove($event)">
                     </product-row>
@@ -43,6 +43,7 @@ export class ProductsListComponent implements OnInit {
 
     toggleCreating(){
         this.isCreating = !this.isCreating;
+        console.log(this.isCreating);
     }
 
     handleCreate(product: Product){
