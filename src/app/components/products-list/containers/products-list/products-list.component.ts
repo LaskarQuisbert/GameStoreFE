@@ -8,25 +8,26 @@ import { ProductsListService } from "../../products-list.service";
     template: `
         <div class="container">
             <product-count [items]="products"></product-count>    
+            
             <button 
                 *ngIf="!isCreating" 
-                class="my-button"
+                class="btn btn-success btn-sm btn-custom"
                 (click)="toggleCreating()">Add new product </button>
-            <product-form
+                <br/>
+                <product-form
                 *ngIf="isCreating"
                 (submit)="handleCreate($event)"
                 (cancel)="handleCancel()">
             </product-form>
-            <table>
-                <tbody>
-                    <product-row
-                        *ngFor="let product of products"
-                        [item]="product"
-                        (edit)="handleEdit($event)"
-                        (remove)="handleRemove($event)">
-                    </product-row>
-                </tbody>
-            </table>
+            <br/>
+            <div class="row row-cols-1 row-cols-md-2 g-4">
+                <product-row
+                    *ngFor="let product of products"
+                    [item]="product"
+                    (edit)="handleEdit($event)"
+                    (remove)="handleRemove($event)">
+                </product-row>
+            </div>
         </div>
     `
 })
@@ -43,7 +44,6 @@ export class ProductsListComponent implements OnInit {
 
     toggleCreating(){
         this.isCreating = !this.isCreating;
-        console.log(this.isCreating);
     }
 
     handleCreate(product: Product){

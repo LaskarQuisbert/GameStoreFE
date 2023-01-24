@@ -5,13 +5,12 @@ import { Product } from '../../models/product.interface';
 @Component({
     selector: 'product-count',
     template: `
-        <div>
-            <h3>Product List!</h3>
-            <div>
+        <nav class="navbar bg-body">
+            <h3 class="navbar-brand">Products List</h3>
+            <div class="title">
                 Total Products: {{ items.length }}
             </div>
-        </div>
-    `
+        </nav>`
 })
 export class ProductCountComponent {
     @Input()
